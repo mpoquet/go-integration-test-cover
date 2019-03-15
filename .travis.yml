@@ -1,0 +1,19 @@
+language: go
+sudo: true
+
+go:
+  - "1.11.4"
+
+before_script:
+  - sudo apt update
+  - sudo apt install -y realpath
+  - go get github.com/axw/gocov/gocov
+  - go get github.com/wadey/gocovmerge
+  - export PATH="${PATH}:${GOPATH:=${HOME}/go}/bin"
+
+script:
+  - ./build.bash
+  - ./integration-test.bash
+  # Send data to codecov.io
+  - mv ./test/merged.covout ./coverage.txt
+  - bash <(curl -s https://codecov.io/bash)
